@@ -4,8 +4,6 @@ import 'package:task2/value/userValue.dart';
 import 'package:task2/tabbar/tabbar_two.dart';
 import 'package:task2/tabbar/tabbar_one.dart';
 import 'package:task2/tabbar/tabbar_three.dart';
-// ignore_for_file: sized_box_for_whitespace
-
 // ignore_for_file: unnecessary_this
 
 // ignore_for_file: unrelated_type_equality_checks
@@ -20,9 +18,7 @@ class UserDashBoard extends StatefulWidget {
 
 class _UserDashBoardState extends State<UserDashBoard> {
   final formKey = GlobalKey<FormState>();
-  final categoryOne = TextEditingController();
-  final categoryTwo = TextEditingController();
-  final categoryThree = TextEditingController();
+  final todoTask = TextEditingController();
   List<dynamic> tabbarname = [];
   Icon action = const Icon(Icons.search);
   Widget? appTitle;
@@ -38,7 +34,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
   List<UserInput> _userList = [];
   readValueTable() async {
     print('read function active');
-    var value = await _userServicesList.readUsersCategory();
+    var value = await _userServicesList.readAllUsers();
     _userList = <UserInput>[];
     value.forEach((userValue) {
       setState(() {
@@ -53,16 +49,6 @@ class _UserDashBoardState extends State<UserDashBoard> {
 
     print(_userList.length);
     print(widget.user.toMap());
-  }
-
-  final _userService = UserService();
-  addCategory() async {
-    var user = Category();
-    user.userId = widget.user.id;
-    user.categoryOne = categoryOne.text;
-    user.categoryTwo = categoryTwo.text;
-    user.categoryThree = categoryTwo.text;
-    await _userService.saveUserCategory(user);
   }
 
   @override
@@ -160,7 +146,6 @@ class _UserDashBoardState extends State<UserDashBoard> {
 
   Widget addTabbarName() {
     return Container(
-      margin: const EdgeInsets.all(55),
       child: Column(
         children: [
           Container(
@@ -171,53 +156,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
               ),
               elevation: 15,
               child: TextFormField(
-                controller: categoryOne,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  prefixIcon: Icon(
-                    Icons.add_task,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Container(
-            width: 600,
-            child: Card(
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadius.circular(14.6),
-              ),
-              elevation: 15,
-              child: TextFormField(
-                controller: categoryTwo,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  prefixIcon: Icon(
-                    Icons.add_task,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Container(
-            width: 600,
-            child: Card(
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadius.circular(14.6),
-              ),
-              elevation: 15,
-              child: TextFormField(
-                controller: categoryThree,
+                controller: todoTask,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15))),
@@ -235,15 +174,16 @@ class _UserDashBoardState extends State<UserDashBoard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                  onPressed: () async {
-                    addCategory();
-                  },
-                  child: const Text('Add Category')),
+              ElevatedButton(onPressed: () async {}, child: const Text('Add')),
               const SizedBox(
                 width: 15,
               ),
-              ElevatedButton(onPressed: () {}, child: const Text('Cancel'))
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    todoTask.text = '';
+                  },
+                  child: const Text('Cancel'))
             ],
           )
         ],

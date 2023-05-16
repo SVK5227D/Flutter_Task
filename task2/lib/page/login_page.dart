@@ -2,6 +2,8 @@ import '../value/services.dart';
 import '../value/userValue.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:task2/page/dashboard.dart';
+
 // ignore_for_file: use_build_context_synchronously
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   List<UserInput> _userList = [];
   final _userServicesList = UserService();
   final formKey = GlobalKey<FormState>();
-  var userCount = 0;
 
   readValueTable() async {
     print('read function active');
@@ -27,20 +28,15 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         var userValuelist = UserInput();
         userValuelist.id = userValue['id'];
+        userValuelist.fullName = userValue['fullName'];
+        userValuelist.emailid = userValue['emailid'];
         userValuelist.mobileNumber = userValue['mobileNumber'];
         userValuelist.password = userValue['password'];
-        userValuelist.userCount = userValue['userCount'];
         _userList.add(userValuelist);
       });
-
-      print(_userList.length);
     });
+    print(_userList.length);
   }
-  // addCount(i) async {
-  //   var user = UserInput();
-  //   user.userCount = _userList[i].userCount;
-  //   await _userService.saveUser(user);
-  // }
 
   @override
   void initState() {
@@ -143,15 +139,20 @@ class _LoginPageState extends State<LoginPage> {
                                     mobileNumberController.text) {
                                   if (_userList[i].password ==
                                       passwordController.text) {
-                                    Navigator.pushNamed(
-                                      context,
-                                      'checkData',
-                                    );
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return UserDashBoard(
+                                            user: _userList[i]);
+                                      },
+                                    ));
+                                    // Navigator.pushNamed(context, 'checkData');
                                   } else {
                                     print('not true');
                                   }
                                 }
                               }
+                              mobileNumberController.text = '';
+                              passwordController.text = '';
                             },
                             child: const Text(
                               'Login',

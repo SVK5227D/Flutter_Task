@@ -20,14 +20,37 @@ class DatabaseConnection {
       "fullName TEXT,"
       "emailid TEXT,"
       "mobileNumber TEXT,"
-      "password TEXT,"
-      "userCount INTEGER"
+      "password TEXT"
+      ")",
+    );
+    print('table2');
+    await database.execute(
+      "CREATE TABLE taskInput1 ("
+      "taskId INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "userId INTEGER,"
+      "task TEXT"
       ")",
     );
     await database.execute(
-      "CREATE TABLE task ("
-      "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-      "taskValue Text"
+      "CREATE TABLE taskInput2 ("
+      "taskId INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "userId INTEGER,"
+      "task TEXT"
+      ")",
+    );
+    await database.execute(
+      "CREATE TABLE taskInput3 ("
+      "taskId INTEGER PRIMARY KEY AUTOINCREMENT,"
+      "userId INTEGER,"
+      "task TEXT"
+      ")",
+    );
+    await database.execute(
+      "CREATE TABLE category ("
+      "userId INTEGER,"
+      "categoryOne Text,"
+      "categoryTwo Text,"
+      "categoryThree Text"
       ")",
     );
   }
