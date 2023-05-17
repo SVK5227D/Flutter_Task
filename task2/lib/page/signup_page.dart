@@ -18,6 +18,7 @@ class _SignupPageState extends State<SignupPage> {
   List<UserInput> _userList = [];
   final _userServicesList = UserService();
   final formKey = GlobalKey<FormState>();
+  bool passwordVisible = false;
 
   readValueTable() async {
     var value = await _userServicesList.readAllUsers();
@@ -66,18 +67,18 @@ class _SignupPageState extends State<SignupPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 150, left: 45),
-              child: const Text(
-                'Signup',
-                style: TextStyle(fontSize: 35, color: Colors.white),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 200, left: 45),
+                child: const Text(
+                  'Signup',
+                  style: TextStyle(fontSize: 35, color: Colors.white),
+                ),
               ),
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Container(
+              Container(
                 padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.38),
                 child: Form(
@@ -127,6 +128,9 @@ class _SignupPageState extends State<SignupPage> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Emailid field is empty';
+                            } else if (!RegExp(r'\S+@\S+\.\S+')
+                                .hasMatch(value)) {
+                              return "Invalid emailid formate";
                             } else if (value.isNotEmpty) {
                               for (int i = 0; i < _userList.length; i++) {
                                 if (value == _userList[i].emailid) {
@@ -155,6 +159,7 @@ class _SignupPageState extends State<SignupPage> {
                                 fontWeight: FontWeight.bold, fontSize: 18),
                             prefixIcon: Icon(Icons.phone_android),
                           ),
+                          maxLength: 10,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
@@ -180,17 +185,29 @@ class _SignupPageState extends State<SignupPage> {
                         margin: const EdgeInsets.only(left: 30, right: 30),
                         child: TextFormField(
                           controller: passwordController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20)),
                             ),
                             labelText: 'Password',
-                            labelStyle: TextStyle(
+                            labelStyle: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
-                            prefixIcon: Icon(Icons.password),
+                            suffixIcon: IconButton(
+                              icon: Icon(passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    passwordVisible = !passwordVisible;
+                                  },
+                                );
+                              },
+                            ),
+                            prefixIcon: const Icon(Icons.password),
                           ),
-                          obscureText: true,
+                          obscureText: !passwordVisible,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Password field is empty';
@@ -214,8 +231,8 @@ class _SignupPageState extends State<SignupPage> {
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             addUser();
+                            Navigator.pushNamed(context, 'login');
                           }
-                          Navigator.pushNamed(context, 'login');
                         },
                         child: const Text('Signup',
                             style: TextStyle(
@@ -250,8 +267,8 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

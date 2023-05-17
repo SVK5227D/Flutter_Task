@@ -45,13 +45,13 @@ class DatabaseConnection {
       "task TEXT"
       ")",
     );
-    await database.execute(
-      "CREATE TABLE category ("
-      "userId INTEGER,"
-      "categoryOne Text,"
-      "categoryTwo Text,"
-      "categoryThree Text"
-      ")",
-    );
+    // await database.execute(
+    //   "CREATE TABLE category ("
+    //   "userId INTEGER,"
+    //   "categoryOne Text,"
+    //   "categoryTwo Text,"
+    //   "categoryThree Text"
+    //   ")",
+    // );
   }
 }

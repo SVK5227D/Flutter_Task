@@ -23,14 +23,17 @@ class _UserDashBoardState extends State<UserDashBoard> {
   final categoryOne = TextEditingController();
   final categoryTwo = TextEditingController();
   final categoryThree = TextEditingController();
-  List<dynamic> tabbarname = [];
+  List<dynamic> _searchTask = [];
   Icon action = const Icon(Icons.search);
   Widget? appTitle;
+  int? valueSearch;
+  int? searchvalue = 0;
 
   @override
   void initState() {
     appTitle = Text(widget.user.fullName!);
     readValueTable();
+    searchFieldValue(valueSearch);
     super.initState();
   }
 
@@ -38,7 +41,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
   List<UserInput> _userList = [];
   readValueTable() async {
     print('read function active');
-    var value = await _userServicesList.readUsersCategory();
+    var value = await _userServicesList.readAllUsers();
     _userList = <UserInput>[];
     value.forEach((userValue) {
       setState(() {
@@ -50,19 +53,82 @@ class _UserDashBoardState extends State<UserDashBoard> {
         _userList.add(userValuelist);
       });
     });
-
     print(_userList.length);
     print(widget.user.toMap());
   }
 
-  final _userService = UserService();
-  addCategory() async {
-    var user = Category();
-    user.userId = widget.user.id;
-    user.categoryOne = categoryOne.text;
-    user.categoryTwo = categoryTwo.text;
-    user.categoryThree = categoryTwo.text;
-    await _userService.saveUserCategory(user);
+  searchFieldValue(valueSearch) async {
+    if (valueSearch == 0) {
+      print('Tabbar1 function active');
+      var value = await _userServicesList.readAllUsersTask1();
+      _searchTask = <TaskValue1>[];
+      await value.forEach((userValue) {
+        setState(() {
+          // var checkId = userValue['id'];
+          var userValuelist = TaskValue1();
+          userValuelist.userId = userValue['userId'];
+          userValuelist.taskId = userValue['taskId'];
+          userValuelist.task = userValue['task'];
+          if (userValuelist.userId == widget.user.id) {
+            _searchTask.add(userValuelist);
+          }
+        });
+      });
+      print(_searchTask.length);
+    } else if (valueSearch == 1) {
+      print('Tabbar2 function active');
+      var value = await _userServicesList.readAllUsersTask2();
+      _searchTask = <TaskValue2>[];
+      await value.forEach((userValue) {
+        setState(() {
+          // var checkId = userValue['id'];
+          var userValuelist = TaskValue2();
+          userValuelist.userId = userValue['userId'];
+          userValuelist.taskId = userValue['taskId'];
+          userValuelist.task = userValue['task'];
+          if (userValuelist.userId == widget.user.id) {
+            _searchTask.add(userValuelist);
+          }
+        });
+      });
+      print(_searchTask.length);
+    } else {
+      print('Tabbar3 function active');
+      var value = await _userServicesList.readAllUsersTask3();
+      _searchTask = <TaskValue3>[];
+      await value.forEach((userValue) {
+        setState(() {
+          // var checkId = userValue['id'];
+          var userValuelist = TaskValue3();
+          userValuelist.userId = userValue['userId'];
+          userValuelist.taskId = userValue['taskId'];
+          userValuelist.task = userValue['task'];
+          if (userValuelist.userId == widget.user.id) {
+            _searchTask.add(userValuelist);
+          }
+        });
+      });
+      print(_searchTask.length);
+    }
+  }
+
+  _filter(String valueFind) async {
+    print('Onchage called');
+    List<dynamic> searchDynamic = [];
+    if (valueFind.isEmpty) {
+      await searchFieldValue(valueSearch);
+      print('if condition called');
+      searchDynamic = _searchTask;
+    } else {
+      searchDynamic = _searchTask
+          .where((element) =>
+              element.task!.toLowerCase().contains(valueFind.toLowerCase()))
+          .toList();
+    }
+    setState(() {
+      _searchTask = searchDynamic;
+    });
+    print('searchList length ${_searchTask.length}');
   }
 
   @override
@@ -78,9 +144,12 @@ class _UserDashBoardState extends State<UserDashBoard> {
               IconButton(
                   onPressed: () {
                     setState(() {
+                      searchContainer();
                       if (this.action.icon == Icons.search) {
+                        searchvalue = 1;
                         this.action = const Icon(Icons.close);
                         this.appTitle = TextFormField(
+                          onChanged: (value) => _filter(value),
                           style: const TextStyle(
                             color: Colors.white,
                           ),
@@ -91,6 +160,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                               hintStyle: TextStyle(color: Colors.white)),
                         );
                       } else {
+                        searchvalue = 0;
                         this.action = const Icon(Icons.search);
                         this.appTitle = Text(widget.user.fullName!);
                       }
@@ -98,20 +168,26 @@ class _UserDashBoardState extends State<UserDashBoard> {
                   },
                   icon: action),
               IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'login');
+                  onPressed: () async {
+                    // Navigator.pushNamed(context, 'login');
+                    await logoutPopUp();
                   },
                   icon: const Icon(Icons.logout))
             ],
           ),
-          body: tabbarname.isNotEmpty
+          body: searchvalue != 1
               ? Container(
                   color: Colors.transparent,
                   child: Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.only(top: 10, bottom: 15),
                         child: TabBar(
+                            onTap: (value) async {
+                              print('Tabbar value is $value');
+                              await searchFieldValue(value);
+                              valueSearch = value;
+                            },
                             indicator: BoxDecoration(
                                 color: Colors.blueAccent,
                                 borderRadius: BorderRadius.circular(25)),
@@ -152,102 +228,54 @@ class _UserDashBoardState extends State<UserDashBoard> {
                     ],
                   ),
                 )
-              : addTabbarName(),
+              : searchContainer(),
         ),
       ),
     );
   }
 
-  Widget addTabbarName() {
-    return Container(
-      margin: const EdgeInsets.all(55),
-      child: Column(
-        children: [
-          Container(
-            width: 600,
-            child: Card(
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadius.circular(14.6),
-              ),
-              elevation: 15,
-              child: TextFormField(
-                controller: categoryOne,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  prefixIcon: Icon(
-                    Icons.add_task,
-                    color: Colors.grey,
-                  ),
+  Widget searchContainer() {
+    return ListView.builder(
+      itemCount: _searchTask.length,
+      itemBuilder: (context, index) {
+        return Card(
+          elevation: 20,
+          margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
+          child: ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _searchTask[index].task!,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w400),
                 ),
-              ),
+              ],
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          Container(
-            width: 600,
-            child: Card(
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadius.circular(14.6),
-              ),
-              elevation: 15,
-              child: TextFormField(
-                controller: categoryTwo,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  prefixIcon: Icon(
-                    Icons.add_task,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Container(
-            width: 600,
-            child: Card(
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadius.circular(14.6),
-              ),
-              elevation: 15,
-              child: TextFormField(
-                controller: categoryThree,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  prefixIcon: Icon(
-                    Icons.add_task,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () async {
-                    addCategory();
-                  },
-                  child: const Text('Add Category')),
-              const SizedBox(
-                width: 15,
-              ),
-              ElevatedButton(onPressed: () {}, child: const Text('Cancel'))
-            ],
-          )
-        ],
-      ),
+        );
+      },
     );
   }
+
+  Future logoutPopUp() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Are you sure you want to logout'),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pushNamed(context, 'login');
+              },
+              child: const Text('Logout'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            )
+          ],
+        ),
+      );
 }

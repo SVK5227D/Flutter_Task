@@ -1,0 +1,94 @@
+
+----------------------     adding category field ---------------------------
+  Widget addTabbarName() {
+    return Container(
+      margin: const EdgeInsets.all(55),
+      child: Column(
+        children: [
+          Container(
+            width: 600,
+            child: Card(
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.circular(14.6),
+              ),
+              elevation: 15,
+              child: TextFormField(
+                controller: categoryOne,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  prefixIcon: Icon(
+                    Icons.add_task,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Container(
+            width: 600,
+            child: Card(
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.circular(14.6),
+              ),
+              elevation: 15,
+              child: TextFormField(
+                controller: categoryTwo,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  prefixIcon: Icon(
+                    Icons.add_task,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Container(
+            width: 600,
+            child: Card(
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.circular(14.6),
+              ),
+              elevation: 15,
+              child: TextFormField(
+                controller: categoryThree,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  prefixIcon: Icon(
+                    Icons.add_task,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  onPressed: () async {
+                    // addCategory();
+                  },
+                  child: const Text('Add Category')),
+              const SizedBox(
+                width: 15,
+              ),
+              ElevatedButton(onPressed: () {}, child: const Text('Cancel'))
+            ],
+          )
+        ],
+      ),
+    );
+  }

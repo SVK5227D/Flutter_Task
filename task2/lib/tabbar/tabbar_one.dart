@@ -64,9 +64,22 @@ class _TabBarOneState extends State<TabBarOne> {
     );
   }
 
+  _moveValue(userId) async {
+    // Navigator.pop(context);
+    await _userServicesList.deleteUserTask1(userId);
+    await readValueTable();
+    Fluttertoast.showToast(
+      msg: 'Task moved to your selected category',
+      gravity: ToastGravity.CENTER,
+      fontSize: 25,
+      backgroundColor: Colors.red,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Color.fromARGB(255, 94, 93, 93),
       body: _userList.isNotEmpty
           ? ListView.builder(
               itemCount: _userList.length,
@@ -114,7 +127,10 @@ class _TabBarOneState extends State<TabBarOne> {
                               const Icon(Icons.delete, color: Colors.redAccent),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await movePopUp(_userList[index].taskId!,
+                                _userList[index].task!);
+                          },
                           icon: const Icon(Icons.next_plan,
                               color: Color.fromRGBO(95, 94, 94, 0.988)),
                         ),
@@ -129,7 +145,7 @@ class _TabBarOneState extends State<TabBarOne> {
         onPressed: () {
           addNewTask();
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_task),
       ),
     );
   }
@@ -208,6 +224,69 @@ class _TabBarOneState extends State<TabBarOne> {
                 Navigator.pop(context);
               },
               child: const Text('Cancel'),
+            )
+          ],
+        ),
+      );
+
+  Future movePopUp(id, task) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Are you want to move the task'),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await choosePopUp(id, task);
+              },
+              child: const Text('Yes'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            )
+          ],
+        ),
+      );
+
+  Future choosePopUp(id, task) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Select which category you want to move'),
+          actions: [
+            Column(
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    var user = TaskValue2();
+                    user.userId = widget.uservalue.id;
+                    user.task = task;
+                    await _userService.saveUserTask2(user);
+                    await _moveValue(id);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Inprocess'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    var user = TaskValue3();
+                    user.userId = widget.uservalue.id;
+                    user.task = task;
+                    await _userService.saveUserTask3(user);
+                    await _moveValue(id);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Complete'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel'),
+                )
+              ],
             )
           ],
         ),

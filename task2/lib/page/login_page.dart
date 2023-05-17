@@ -3,6 +3,7 @@ import '../value/userValue.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:task2/page/dashboard.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // ignore_for_file: use_build_context_synchronously
 
@@ -19,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   List<UserInput> _userList = [];
   final _userServicesList = UserService();
   final formKey = GlobalKey<FormState>();
+  bool passwordVisible = false;
 
   readValueTable() async {
     print('read function active');
@@ -85,8 +87,9 @@ class _LoginPageState extends State<LoginPage> {
                               labelText: 'Mobile Number',
                               labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18),
-                              prefixIcon: Icon(Icons.phone),
+                              prefixIcon: Icon(Icons.phone_android),
                             ),
+                            maxLength: 10,
                             keyboardType: TextInputType.number,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly
@@ -107,17 +110,29 @@ class _LoginPageState extends State<LoginPage> {
                           margin: const EdgeInsets.only(left: 30, right: 30),
                           child: TextFormField(
                             controller: passwordController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20)),
                               ),
                               labelText: 'Password',
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18),
-                              prefixIcon: Icon(Icons.password),
+                              prefixIcon: const Icon(Icons.password),
+                              suffixIcon: IconButton(
+                                icon: Icon(passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      passwordVisible = !passwordVisible;
+                                    },
+                                  );
+                                },
+                              ),
                             ),
-                            obscureText: true,
+                            obscureText: !passwordVisible,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Password field is empty';
@@ -132,27 +147,35 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         TextButton(
                             onPressed: () async {
-                              // Navigator.pushNamed(context, 'checkData');
-                              for (int i = 0; i < _userList.length; i++) {
-                                print(_userList[i].toMap());
-                                if (_userList[i].mobileNumber ==
-                                    mobileNumberController.text) {
-                                  if (_userList[i].password ==
-                                      passwordController.text) {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return UserDashBoard(
-                                            user: _userList[i]);
-                                      },
-                                    ));
-                                    // Navigator.pushNamed(context, 'checkData');
+                              if (formKey.currentState!.validate()) {
+                                // Navigator.pushNamed(context, 'checkData');
+                                for (int i = 0; i < _userList.length; i++) {
+                                  print(_userList[i].toMap());
+                                  if (_userList[i].mobileNumber ==
+                                      mobileNumberController.text) {
+                                    if (_userList[i].password ==
+                                        passwordController.text) {
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return UserDashBoard(
+                                              user: _userList[i]);
+                                        },
+                                      ));
+                                      // Navigator.pushNamed(context, 'checkData');
+                                    }
                                   } else {
-                                    print('not true');
+                                    Fluttertoast.showToast(
+                                      msg: 'User Name or Password is Incorrect',
+                                      gravity: ToastGravity.CENTER,
+                                      fontSize: 25,
+                                      backgroundColor: Colors.red,
+                                    );
                                   }
                                 }
+
+                                mobileNumberController.text = '';
+                                passwordController.text = '';
                               }
-                              mobileNumberController.text = '';
-                              passwordController.text = '';
                             },
                             child: const Text(
                               'Login',

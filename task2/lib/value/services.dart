@@ -84,13 +84,13 @@ class UserService {
   }
 
   // ----------------------------            category           ------------------------------->
-  //Save User
-  saveUserCategory(Category user) async {
-    return await _repository.insertDataCategory('category', user.toMap());
-  }
+  // //Save User
+  // saveUserCategory(Category user) async {
+  //   return await _repository.insertDataCategory('category', user.toMap());
+  // }
 
-  //Read All category
-  readUsersCategory() async {
-    return await _repository.readDataCategory('category');
-  }
+  // //Read All category
+  // readUsersCategory() async {
+  //   return await _repository.readDataCategory('category');
+  // }
 }
