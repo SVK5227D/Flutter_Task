@@ -1,5 +1,5 @@
-import '../value/services.dart';
 import '../value/userValue.dart';
+import '../services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,6 +11,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  // Text Controller
   final fullNameController = TextEditingController();
   final emailidController = TextEditingController();
   final mobileNumberController = TextEditingController();
@@ -29,7 +30,7 @@ class _SignupPageState extends State<SignupPage> {
         userValuelist.fullName = userValue['firstName'];
         userValuelist.emailid = userValue['emailid'];
         userValuelist.mobileNumber = userValue['mobileNumber'];
-        userValuelist.password = userValue['mobileNumber'];
+        userValuelist.password = userValue['password'];
         _userList.add(userValuelist);
       });
     });

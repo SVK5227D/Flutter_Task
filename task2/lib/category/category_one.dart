@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:task2/value/services.dart';
 import 'package:task2/value/userValue.dart';
+import 'package:task2/services/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:task2/tabbar/tabbar_oneupdate.dart';
+import 'package:task2/category/category_oneupdate.dart';
 // ignore_for_file: use_build_context_synchronously
 
 class TabBarOne extends StatefulWidget {
@@ -79,7 +79,7 @@ class _TabBarOneState extends State<TabBarOne> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Color.fromARGB(255, 94, 93, 93),
+      backgroundColor: const Color.fromARGB(255, 23, 45, 241),
       body: _userList.isNotEmpty
           ? ListView.builder(
               itemCount: _userList.length,
@@ -142,6 +142,7 @@ class _TabBarOneState extends State<TabBarOne> {
             )
           : emptyListPop(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         onPressed: () {
           addNewTask();
         },
@@ -171,7 +172,7 @@ class _TabBarOneState extends State<TabBarOne> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),
                           prefixIcon: Icon(
-                            Icons.add_task,
+                            Icons.text_fields,
                             color: Colors.grey,
                           ),
                         ),

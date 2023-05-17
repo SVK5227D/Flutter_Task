@@ -19,9 +19,9 @@ class UserService {
   }
 
   // //Edit User
-  // updateUser(UserInput user) async {
-  //   return await _repository.updateData('userInput', user.toMap());
-  // }
+  updateUser(UserInput user) async {
+    return await _repository.updateData('userInput', user.toMap());
+  }
 
   // deleteUser(userId) async {
   //   return await _repository.deleteDataById(userId);

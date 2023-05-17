@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:task2/value/services.dart';
 import 'package:task2/value/userValue.dart';
-import 'package:task2/tabbar/tabbar_two.dart';
-import 'package:task2/tabbar/tabbar_one.dart';
-import 'package:task2/tabbar/tabbar_three.dart';
+import 'package:task2/services/services.dart';
+import 'package:task2/category/category_two.dart';
+import 'package:task2/category/category_one.dart';
+import 'package:task2/category/category_three.dart';
+// ignore_for_file: avoid_print
+
 // ignore_for_file: sized_box_for_whitespace
 
 // ignore_for_file: unnecessary_this
@@ -31,7 +33,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
 
   @override
   void initState() {
-    appTitle = Text(widget.user.fullName!);
+    appTitle = Text(widget.user.fullName!,
+        style: const TextStyle(color: Colors.black, fontSize: 25));
     readValueTable();
     searchFieldValue(valueSearch);
     super.initState();
@@ -162,7 +165,11 @@ class _UserDashBoardState extends State<UserDashBoard> {
                       } else {
                         searchvalue = 0;
                         this.action = const Icon(Icons.search);
-                        this.appTitle = Text(widget.user.fullName!);
+                        this.appTitle = Text(
+                          widget.user.fullName!,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 25),
+                        );
                       }
                     });
                   },
@@ -189,7 +196,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                               valueSearch = value;
                             },
                             indicator: BoxDecoration(
-                                color: Colors.blueAccent,
+                                color: Color.fromARGB(255, 44, 214, 143),
                                 borderRadius: BorderRadius.circular(25)),
                             // controller: _tabController,
                             tabs: const <Widget>[

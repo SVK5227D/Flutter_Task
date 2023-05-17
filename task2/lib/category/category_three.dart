@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:task2/value/services.dart';
 import 'package:task2/value/userValue.dart';
+import 'package:task2/services/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:task2/tabbar/tabbar_twoupdate.dart';
+import 'package:task2/category/category_threeupdate.dart';
 // ignore_for_file: use_build_context_synchronously
 
-class TabBarTwo extends StatefulWidget {
+class TabBarThree extends StatefulWidget {
   final UserInput uservalue;
-  const TabBarTwo({super.key, required this.uservalue});
+  const TabBarThree({super.key, required this.uservalue});
 
   @override
-  State<TabBarTwo> createState() => _TabBarTwoState();
+  State<TabBarThree> createState() => _TabBarThreeState();
 }
 
-class _TabBarTwoState extends State<TabBarTwo> {
-  final todoTask2 = TextEditingController();
-  List<TaskValue2> _userList = [];
+class _TabBarThreeState extends State<TabBarThree> {
+  final todoTask3 = TextEditingController();
+  List<TaskValue3> _userList = [];
   final _userService = UserService();
   final _userServicesList = UserService();
   addTask() async {
-    var user = TaskValue2();
+    var user = TaskValue3();
     user.userId = widget.uservalue.id;
-    user.task = todoTask2.text;
-    await _userService.saveUserTask2(user);
-    todoTask2.text = '';
+    user.task = todoTask3.text;
+    await _userService.saveUserTask3(user);
+    todoTask3.text = '';
     // await readValueTable();
   }
 
   readValueTable() async {
     print('read function active');
-    var value = await _userServicesList.readAllUsersTask2();
-    _userList = <TaskValue2>[];
+    var value = await _userServicesList.readAllUsersTask3();
+    _userList = <TaskValue3>[];
     value.forEach((userValue) {
       setState(() {
         // var checkId = userValue['id'];
-        var userValuelist = TaskValue2();
+        var userValuelist = TaskValue3();
         userValuelist.userId = userValue['userId'];
         userValuelist.taskId = userValue['taskId'];
         userValuelist.task = userValue['task'];
@@ -53,7 +53,8 @@ class _TabBarTwoState extends State<TabBarTwo> {
   }
 
   _deleteValue(userId) async {
-    await _userServicesList.deleteUserTask2(userId);
+    // Navigator.pop(context);
+    await _userServicesList.deleteUserTask3(userId);
     await readValueTable();
 
     Fluttertoast.showToast(
@@ -66,7 +67,7 @@ class _TabBarTwoState extends State<TabBarTwo> {
 
   _moveValue(userId) async {
     // Navigator.pop(context);
-    await _userServicesList.deleteUserTask2(userId);
+    await _userServicesList.deleteUserTask3(userId);
     await readValueTable();
     Fluttertoast.showToast(
       msg: 'Task moved to your selected category',
@@ -79,6 +80,7 @@ class _TabBarTwoState extends State<TabBarTwo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 23, 45, 241),
       body: _userList.isNotEmpty
           ? ListView.builder(
               itemCount: _userList.length,
@@ -107,7 +109,7 @@ class _TabBarTwoState extends State<TabBarTwo> {
                             String refresh = await Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) {
-                              return UpdateTask2(
+                              return UpdateTask3(
                                 user: _userList[index],
                               );
                             }));
@@ -141,10 +143,11 @@ class _TabBarTwoState extends State<TabBarTwo> {
             )
           : emptyListPop(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         onPressed: () {
           addNewTask();
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_task),
       ),
     );
   }
@@ -164,13 +167,13 @@ class _TabBarTwoState extends State<TabBarTwo> {
                       ),
                       elevation: 15,
                       child: TextFormField(
-                        controller: todoTask2,
+                        controller: todoTask3,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),
                           prefixIcon: Icon(
-                            Icons.add_task,
+                            Icons.text_fields,
                             color: Colors.grey,
                           ),
                         ),
@@ -196,7 +199,7 @@ class _TabBarTwoState extends State<TabBarTwo> {
                       ElevatedButton(
                           onPressed: () {
                             Navigator.pop(context);
-                            todoTask2.text = '';
+                            todoTask3.text = '';
                           },
                           child: const Text('Cancel'))
                     ],
@@ -268,14 +271,14 @@ class _TabBarTwoState extends State<TabBarTwo> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    var user = TaskValue3();
+                    var user = TaskValue2();
                     user.userId = widget.uservalue.id;
                     user.task = task;
-                    await _userService.saveUserTask3(user);
+                    await _userService.saveUserTask2(user);
                     await _moveValue(id);
                     Navigator.pop(context);
                   },
-                  child: const Text('Complete'),
+                  child: const Text('Inprocess'),
                 ),
                 TextButton(
                   onPressed: () {

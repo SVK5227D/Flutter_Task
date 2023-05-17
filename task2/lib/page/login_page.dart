@@ -1,5 +1,5 @@
-import '../value/services.dart';
 import '../value/userValue.dart';
+import '../services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:task2/page/dashboard.dart';
@@ -15,13 +15,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Text Controller
   final mobileNumberController = TextEditingController();
   final passwordController = TextEditingController();
+  final changepassword = TextEditingController();
+  final changePasswordMobile = TextEditingController();
   List<UserInput> _userList = [];
   final _userServicesList = UserService();
   final formKey = GlobalKey<FormState>();
   bool passwordVisible = false;
-
+  int toast = 0;
+  // Getting value from user table
   readValueTable() async {
     print('read function active');
     var value = await _userServicesList.readAllUsers();
@@ -147,34 +151,44 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         TextButton(
                             onPressed: () async {
+                              toast = 0;
                               if (formKey.currentState!.validate()) {
-                                // Navigator.pushNamed(context, 'checkData');
-                                for (int i = 0; i < _userList.length; i++) {
-                                  print(_userList[i].toMap());
-                                  if (_userList[i].mobileNumber ==
+                                _userList.forEach((element) {
+                                  if (element.mobileNumber ==
                                       mobileNumberController.text) {
-                                    if (_userList[i].password ==
+                                    if (element.password ==
                                         passwordController.text) {
+                                      toast = 0;
                                       Navigator.push(context, MaterialPageRoute(
                                         builder: (context) {
-                                          return UserDashBoard(
-                                              user: _userList[i]);
+                                          return UserDashBoard(user: element);
                                         },
                                       ));
-                                      // Navigator.pushNamed(context, 'checkData');
+                                      mobileNumberController.text = '';
+                                      passwordController.text = '';
+                                    } else {
+                                      toast = 1;
                                     }
                                   } else {
-                                    Fluttertoast.showToast(
-                                      msg: 'User Name or Password is Incorrect',
-                                      gravity: ToastGravity.CENTER,
-                                      fontSize: 25,
-                                      backgroundColor: Colors.red,
-                                    );
+                                    toast = 2;
                                   }
-                                }
-
-                                mobileNumberController.text = '';
-                                passwordController.text = '';
+                                });
+                              }
+                              if (toast == 1) {
+                                Fluttertoast.showToast(
+                                  msg: 'Password is Incorrect',
+                                  gravity: ToastGravity.CENTER,
+                                  fontSize: 25,
+                                  backgroundColor: Colors.red,
+                                );
+                              }
+                              if (toast == 2) {
+                                Fluttertoast.showToast(
+                                  msg: 'UserName is Incorrect',
+                                  gravity: ToastGravity.CENTER,
+                                  fontSize: 25,
+                                  backgroundColor: Colors.red,
+                                );
                               }
                             },
                             child: const Text(
@@ -199,6 +213,18 @@ class _LoginPageState extends State<LoginPage> {
                                 decoration: TextDecoration.underline),
                           ),
                         ),
+                        TextButton(
+                          onPressed: () {
+                            resetTask();
+                          },
+                          child: const Text(
+                            'Forgot Password!',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -208,4 +234,96 @@ class _LoginPageState extends State<LoginPage> {
           )),
     );
   }
+
+  Future resetTask() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: const Text('Update new Password'),
+            actions: [
+              Column(
+                children: [
+                  Container(
+                    width: 600,
+                    child: Card(
+                      shape: BeveledRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.6),
+                      ),
+                      elevation: 15,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: changePasswordMobile,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              prefixIcon: Icon(
+                                Icons.phone_android,
+                                color: Colors.grey,
+                              ),
+                              hintText: 'Enter your mobile number',
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
+                            controller: changepassword,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
+                                prefixIcon: Icon(
+                                  Icons.password,
+                                  color: Colors.grey,
+                                ),
+                                hintText: 'Enter your new password'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            print('password changed called');
+                            _userList.forEach((element) async {
+                              if (element.mobileNumber ==
+                                  changePasswordMobile.text) {
+                                print('if condition active');
+                                var user = UserInput();
+                                final _userService = UserService();
+                                user.id = element.id;
+                                user.fullName = element.fullName;
+                                user.emailid = element.emailid;
+                                user.mobileNumber = element.mobileNumber;
+                                user.password = changepassword.text;
+                                await _userService.updateUser(user);
+                                Navigator.pop(context);
+                                changePasswordMobile.text = '';
+                                changepassword.text = '';
+                              }
+                            });
+                            await readValueTable();
+                          },
+                          child: const Text('Update')),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'))
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ));
 }
