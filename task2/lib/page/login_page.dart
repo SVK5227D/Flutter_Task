@@ -159,7 +159,8 @@ class _LoginPageState extends State<LoginPage> {
                                     if (element.password ==
                                         passwordController.text) {
                                       toast = 0;
-                                      Navigator.push(context, MaterialPageRoute(
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
                                         builder: (context) {
                                           return UserDashBoard(user: element);
                                         },

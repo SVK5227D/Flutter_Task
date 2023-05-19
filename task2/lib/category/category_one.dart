@@ -53,9 +53,11 @@ class _TabBarOneState extends State<TabBarOne> {
   }
 
   _deleteValue(userId) async {
-    // Navigator.pop(context);
     await _userServicesList.deleteUserTask1(userId);
     await readValueTable();
+    if (_userList.isEmpty) {
+      emptyListPop();
+    }
     Fluttertoast.showToast(
       msg: 'Task removed',
       gravity: ToastGravity.CENTER,
@@ -68,6 +70,9 @@ class _TabBarOneState extends State<TabBarOne> {
     // Navigator.pop(context);
     await _userServicesList.deleteUserTask1(userId);
     await readValueTable();
+    if (_userList.isEmpty) {
+      emptyListPop();
+    }
     Fluttertoast.showToast(
       msg: 'Task moved to your selected category',
       gravity: ToastGravity.CENTER,

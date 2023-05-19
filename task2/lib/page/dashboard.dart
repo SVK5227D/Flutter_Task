@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:task2/value/userValue.dart';
 import 'package:task2/services/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:task2/category/category_two.dart';
 import 'package:task2/category/category_one.dart';
 import 'package:task2/category/category_three.dart';
+import 'package:task2/category/category_twoupdate.dart';
+import 'package:task2/category/category_oneupdate.dart';
+import 'package:task2/category/category_threeupdate.dart';
+
 // ignore_for_file: avoid_print
-
 // ignore_for_file: sized_box_for_whitespace
-
 // ignore_for_file: unnecessary_this
-
 // ignore_for_file: unrelated_type_equality_checks
 
 class UserDashBoard extends StatefulWidget {
@@ -33,8 +35,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
 
   @override
   void initState() {
-    appTitle = Text(widget.user.fullName!,
-        style: const TextStyle(color: Colors.black, fontSize: 25));
+    appTitle = const Text('Todo Task',
+        style: TextStyle(color: Colors.black, fontSize: 25));
     readValueTable();
     searchFieldValue(valueSearch);
     super.initState();
@@ -134,6 +136,40 @@ class _UserDashBoardState extends State<UserDashBoard> {
     print('searchList length ${_searchTask.length}');
   }
 
+  _deleteValue(userId) async {
+    if (searchvalue == 0) {
+      await _userServicesList.deleteUserTask1(userId);
+      await readValueTable();
+
+      Fluttertoast.showToast(
+        msg: 'Task removed',
+        gravity: ToastGravity.CENTER,
+        fontSize: 25,
+        backgroundColor: Colors.red,
+      );
+    } else if (searchvalue == 1) {
+      await _userServicesList.deleteUserTask2(userId);
+      await readValueTable();
+
+      Fluttertoast.showToast(
+        msg: 'Task removed',
+        gravity: ToastGravity.CENTER,
+        fontSize: 25,
+        backgroundColor: Colors.red,
+      );
+    } else {
+      await _userServicesList.deleteUserTask3(userId);
+      await readValueTable();
+
+      Fluttertoast.showToast(
+        msg: 'Task removed',
+        gravity: ToastGravity.CENTER,
+        fontSize: 25,
+        backgroundColor: Colors.red,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -141,6 +177,63 @@ class _UserDashBoardState extends State<UserDashBoard> {
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
+          drawer: Drawer(
+            width: 280,
+            child: ListView(
+              children: [
+                DrawerHeader(
+                    padding: const EdgeInsets.only(top: 25, left: 15),
+                    // decoration: BoxDecoration(color: Colors.amberAccent),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 120,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100.0),
+                            child: const Icon(Icons.person),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Text(
+                          'Welcome come back\n${widget.user.fullName ?? ' '}',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    )),
+                Container(
+                  width: double.infinity,
+                  child: ListTile(
+                      title: Row(
+                    children: [
+                      Icon(Icons.email_outlined),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        widget.user.emailid ?? '',
+                        style: TextStyle(fontSize: 15),
+                      )
+                    ],
+                  )),
+                ),
+                ListTile(
+                    title: Row(
+                  children: [
+                    Icon(Icons.phone_android),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      widget.user.mobileNumber ?? '',
+                      style: TextStyle(fontSize: 15),
+                    )
+                  ],
+                )),
+              ],
+            ),
+          ),
           appBar: AppBar(
             title: appTitle,
             actions: [
@@ -165,10 +258,9 @@ class _UserDashBoardState extends State<UserDashBoard> {
                       } else {
                         searchvalue = 0;
                         this.action = const Icon(Icons.search);
-                        this.appTitle = Text(
-                          widget.user.fullName!,
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 25),
+                        this.appTitle = const Text(
+                          'Todo Task',
+                          style: TextStyle(color: Colors.black, fontSize: 25),
                         );
                       }
                     });
@@ -259,6 +351,65 @@ class _UserDashBoardState extends State<UserDashBoard> {
                 ),
               ],
             ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    if (valueSearch == 0) {
+                      String refresh = await Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return UpdateTask(
+                          user: _searchTask[index],
+                        );
+                      }));
+                      if (refresh == 'closed') {
+                        readValueTable();
+                        searchvalue = 0;
+                      }
+                    } else if (searchvalue == 1) {
+                      String refresh = await Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return UpdateTask2(
+                          user: _searchTask[index],
+                        );
+                      }));
+                      if (refresh == 'closed') {
+                        readValueTable();
+                        searchvalue = 0;
+                      }
+                    } else {
+                      String refresh = await Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return UpdateTask3(
+                          user: _searchTask[index],
+                        );
+                      }));
+                      if (refresh == 'closed') {
+                        readValueTable();
+                        searchvalue = 0;
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.edit_document,
+                      color: Color.fromRGBO(95, 94, 94, 0.988)),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    await deletePopUp(_searchTask[index].taskId);
+                    searchvalue = 0;
+                  },
+                  icon: const Icon(Icons.delete, color: Colors.redAccent),
+                ),
+                IconButton(
+                  onPressed: () async {},
+                  icon: const Icon(Icons.next_plan,
+                      color: Color.fromRGBO(95, 94, 94, 0.988)),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -275,6 +426,28 @@ class _UserDashBoardState extends State<UserDashBoard> {
                 Navigator.pushNamed(context, 'login');
               },
               child: const Text('Logout'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            )
+          ],
+        ),
+      );
+
+  Future deletePopUp(id) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Are you want to delete the task'),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                await _deleteValue(id);
+                Navigator.pop(context);
+              },
+              child: const Text('Ok'),
             ),
             ElevatedButton(
               onPressed: () async {
