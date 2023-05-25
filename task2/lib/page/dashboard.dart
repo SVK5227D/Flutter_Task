@@ -8,6 +8,8 @@ import 'package:task2/category/category_three.dart';
 import 'package:task2/category/category_twoupdate.dart';
 import 'package:task2/category/category_oneupdate.dart';
 import 'package:task2/category/category_threeupdate.dart';
+// ignore_for_file: use_build_context_synchronously
+
 
 // ignore_for_file: avoid_print
 // ignore_for_file: sized_box_for_whitespace
@@ -198,7 +200,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                         ),
                         Text(
                           'Welcome come back\n${widget.user.fullName ?? ' '}',
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ],
                     )),
@@ -207,13 +209,13 @@ class _UserDashBoardState extends State<UserDashBoard> {
                   child: ListTile(
                       title: Row(
                     children: [
-                      Icon(Icons.email_outlined),
+                      const Icon(Icons.email_outlined),
                       const SizedBox(
                         width: 10,
                       ),
                       Text(
                         widget.user.emailid ?? '',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                       )
                     ],
                   )),
@@ -221,13 +223,13 @@ class _UserDashBoardState extends State<UserDashBoard> {
                 ListTile(
                     title: Row(
                   children: [
-                    Icon(Icons.phone_android),
+                    const Icon(Icons.phone_android),
                     const SizedBox(
                       width: 10,
                     ),
                     Text(
                       widget.user.mobileNumber ?? '',
-                      style: TextStyle(fontSize: 15),
+                      style: const TextStyle(fontSize: 15),
                     )
                   ],
                 )),
@@ -288,7 +290,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                               valueSearch = value;
                             },
                             indicator: BoxDecoration(
-                                color: Color.fromARGB(255, 44, 214, 143),
+                                color: const Color.fromARGB(255, 44, 214, 143),
                                 borderRadius: BorderRadius.circular(25)),
                             // controller: _tabController,
                             tabs: const <Widget>[

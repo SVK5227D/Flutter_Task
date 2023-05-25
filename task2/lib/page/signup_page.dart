@@ -2,6 +2,8 @@ import '../value/userValue.dart';
 import '../services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore_for_file: use_build_context_synchronously
+
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -229,9 +231,9 @@ class _SignupPageState extends State<SignupPage> {
                         height: 15,
                       ),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            addUser();
+                            await addUser();
                             Navigator.pushNamed(context, 'login');
                           }
                         },

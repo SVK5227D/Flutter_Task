@@ -3,6 +3,8 @@ import 'package:task2/value/userValue.dart';
 import 'package:task2/services/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:task2/category/category_twoupdate.dart';
+// ignore_for_file: avoid_print
+
 // ignore_for_file: use_build_context_synchronously
 
 class TabBarTwo extends StatefulWidget {
@@ -158,7 +160,7 @@ class _TabBarTwoState extends State<TabBarTwo> {
             actions: [
               Column(
                 children: [
-                  Container(
+                  SizedBox(
                     width: 600,
                     child: Card(
                       shape: BeveledRectangleBorder(

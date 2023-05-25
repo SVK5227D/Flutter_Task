@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:task2/page/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
+// ignore_for_file: avoid_print
+
 
 // ignore_for_file: use_build_context_synchronously
 
@@ -153,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () async {
                               toast = 0;
                               if (formKey.currentState!.validate()) {
-                                _userList.forEach((element) {
+                                for (var element in _userList) {
                                   if (element.mobileNumber ==
                                       mobileNumberController.text) {
                                     if (element.password ==
@@ -173,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                                   } else {
                                     toast = 2;
                                   }
-                                });
+                                }
                               }
                               if (toast == 1) {
                                 Fluttertoast.showToast(
@@ -243,7 +247,7 @@ class _LoginPageState extends State<LoginPage> {
             actions: [
               Column(
                 children: [
-                  Container(
+                  SizedBox(
                     width: 600,
                     child: Card(
                       shape: BeveledRectangleBorder(
@@ -298,13 +302,13 @@ class _LoginPageState extends State<LoginPage> {
                                   changePasswordMobile.text) {
                                 print('if condition active');
                                 var user = UserInput();
-                                final _userService = UserService();
+                                final userService = UserService();
                                 user.id = element.id;
                                 user.fullName = element.fullName;
                                 user.emailid = element.emailid;
                                 user.mobileNumber = element.mobileNumber;
                                 user.password = changepassword.text;
-                                await _userService.updateUser(user);
+                                await userService.updateUser(user);
                                 Navigator.pop(context);
                                 changePasswordMobile.text = '';
                                 changepassword.text = '';

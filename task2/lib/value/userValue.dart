@@ -1,4 +1,5 @@
-// ignore_for_file: camel_case_types
+
+// ignore_for_file: file_names
 
 class UserInput {
   int? id, userCount;

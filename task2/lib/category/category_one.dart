@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:task2/category/category_oneupdate.dart';
 // ignore_for_file: use_build_context_synchronously
 
+// ignore_for_file: avoid_print
+
 class TabBarOne extends StatefulWidget {
   final UserInput uservalue;
   const TabBarOne({super.key, required this.uservalue});
@@ -33,7 +35,7 @@ class _TabBarOneState extends State<TabBarOne> {
     _userList = <TaskValue1>[];
     value.forEach((userValue) {
       setState(() {
-        // var checkId = userValue['id'];
+        // Converting list into map formate
         var userValuelist = TaskValue1();
         userValuelist.userId = userValue['userId'];
         userValuelist.taskId = userValue['taskId'];
@@ -163,7 +165,7 @@ class _TabBarOneState extends State<TabBarOne> {
             actions: [
               Column(
                 children: [
-                  Container(
+                  SizedBox(
                     width: 600,
                     child: Card(
                       shape: BeveledRectangleBorder(

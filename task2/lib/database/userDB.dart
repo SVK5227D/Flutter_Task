@@ -1,6 +1,8 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+// ignore_for_file: avoid_print
+
 // ignore_for_file: non_constant_identifier_names
 
 class DatabaseConnection {
