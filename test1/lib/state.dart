@@ -1,6 +1,7 @@
 import 'package:test1/cart.dart';
 import 'package:flutter/material.dart';
 
+// Widget
 class ListItem extends StatefulWidget {
   const ListItem({super.key});
 
@@ -8,6 +9,7 @@ class ListItem extends StatefulWidget {
   State<ListItem> createState() => _ListItemState();
 }
 
+// State of the Widget
 class _ListItemState extends State<ListItem> {
   List value = [
     '1',
@@ -31,11 +33,8 @@ class _ListItemState extends State<ListItem> {
     '19',
     '20',
   ];
-  MaterialColor cardColor = Colors.amber;
-  // int colorTab = 0;
-  int? selectIndex;
   List selectedList = [];
-  // static const IconData shopping_cart = IconData(0xe59c, fontFamily: 'MaterialIcons');
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,10 +44,15 @@ class _ListItemState extends State<ListItem> {
           actions: [
             IconButton(
                 onPressed: () {
-                  // CartList(selectedList: selectedList);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          CartList(selectedList: selectedList)));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return CartList(selectedList: selectedList);
+                      },
+                    ),
+                  ).then((value) => setState(
+                        () {},
+                      ));
                 },
                 icon: const Icon(
                   Icons.shopping_cart_outlined,
@@ -64,19 +68,6 @@ class _ListItemState extends State<ListItem> {
             (index) => TextButton(
               onPressed: () {
                 setState(() {
-                  // if (index == selectIndex) {
-                  //   selectIndex = null;
-                  // } else {
-                  //   selectIndex = index;
-                  // }
-                  // selectedList.add(value[index]);
-                  // if (selectedList.contains(value[index])) {
-                  //   if (index == selectIndex) {
-                  //     selectIndex = null;
-                  //   } else {
-                  //     selectIndex = index;
-                  //   }
-                  // }
                   if (selectedList.contains(value[index].toString())) {
                     selectedList.remove(value[index].toString());
                   } else {
@@ -89,8 +80,6 @@ class _ListItemState extends State<ListItem> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
                 elevation: 15,
-                // shadowColor: selectIndex == index ? Colors.purple : null,
-                // color: selectIndex == index ? Colors.green : null,
                 color: selectedList.contains(value[index].toString())
                     ? Colors.green
                     : null,

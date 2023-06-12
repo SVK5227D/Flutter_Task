@@ -1,3 +1,4 @@
+import 'package:test1/button.dart';
 import 'package:flutter/material.dart';
 
 class CartList extends StatefulWidget {
@@ -10,39 +11,118 @@ class CartList extends StatefulWidget {
 
 class _CartListState extends State<CartList> {
   List cart = [];
+  List laterCard = [];
+  callback(value, btnName) {
+    if (btnName == 'Save') {
+      laterCard.add(value);
+      cart.remove(value);
+    } else if (btnName == 'MoveCart') {
+      cart.add(value);
+      laterCard.remove(value);
+    } else {
+      if (cart.contains(value)) {
+        cart.remove(value);
+      } else {
+        laterCard.remove(value);
+      }
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    cart = widget.selectedList;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
-        child: ListView.builder(
-          itemCount: widget.selectedList.length,
-          itemBuilder: (context, index) {
-            return Card(
-              // child: Center(
-              //   child: Text(
-              //     widget.selectedList[index],
-              //     style: const TextStyle(
-              //       fontSize: 25,
-              //     ),
-              //   ),
-              // ),
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text(widget.selectedList[index].toString()),
-                  ),
-                  ButtonBar(
-                    children: [
-                      IconButton(
-                          onPressed: () {}, icon: Icon(Icons.movie_filter)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-                    ],
-                  )
-                ],
+        child: Column(
+          children: [
+            Flexible(
+              child: Container(
+                color: Colors.amber,
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: cart.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      margin:
+                          const EdgeInsets.only(left: 25, right: 25, top: 15),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text(cart[index].toString()),
+                          ),
+                          Row(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 50),
+                              ),
+                              MyButton(
+                                btnName: "Save",
+                                value: cart[index],
+                                callBack: callback,
+                              ),
+                              const SizedBox(
+                                width: 50,
+                              ),
+                              MyButton(
+                                btnName: "Delete",
+                                value: cart[index],
+                                callBack: callback,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            );
-          },
+            ),
+            Flexible(
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: laterCard.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: const EdgeInsets.only(left: 25, right: 25, top: 15),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(laterCard[index].toString()),
+                        ),
+                        Row(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(left: 50),
+                            ),
+                            MyButton(
+                              btnName: "MoveCart",
+                              value: laterCard[index],
+                              callBack: callback,
+                            ),
+                            const SizedBox(
+                              width: 50,
+                            ),
+                            MyButton(
+                              btnName: "Delete",
+                              value: laterCard[index],
+                              callBack: callback,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
