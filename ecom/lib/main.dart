@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ecom/screen/main_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+// ignore_for_file: must_be_immutable
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -10,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
